@@ -26,5 +26,5 @@ def register():
     db.session.add(u)
     db.session.commit()
     print(name, email, password, confirm_password)
-    return redirect(url_for('index'))
+    return redirect(url_for('login'))
   return render_template('register.html')
