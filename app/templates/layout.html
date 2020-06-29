@@ -15,33 +15,12 @@
 
 <body>
   <header>
-    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-      <a class="navbar-brand" href="{{url_for('index') }}">Navbar</a>
-      <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId"
-        aria-controls="collapsibleNavId" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="collapsibleNavId">
-        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-          <li class="nav-item active">
-            <a class="nav-link" href="{{url_for('index') }}">Home <span class="sr-only">(current)</span></a>
-          </li>
-        </ul>
-        <ul class="navbar-nav m1-auto">
-          <li class="nav-item">
-            <a href="{{ url_for('login') }}" class="nav-link">Login</a>
-          </li>
-          <li class="nav-item">
-            <a href="{{ url_for('register') }}" class="nav-link">Register</a>
-          </li>
-        </ul>
-      </div>
-    </nav>
+    {% include './partials/nav.html' %}
   </header>
   <main class="container">
     {% block content %}{% endblock %}
   </main>
-
+  
   <!-- Optional JavaScript -->
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
