@@ -1,6 +1,7 @@
 from app import app, db, login_manager
 from app.models import User
 from flask import render_template, request, redirect, url_for, flash
+from flask_login import login_user, logout_user
 
 @app.route('/')
 def index():
@@ -11,10 +12,12 @@ def login():
   if request.method == 'POST':
     email = request.form.get('email')
     password = request.form.get('password')
+    remember_me = request.form.get('remember_me')
 
     user = User.query.filter_by(email=email).first()
     if user:
-      if user.check_password_hash(password):
+      if user.check_password(password):
+        login_user(user, remember=remember_me)
         flash('Login accepted', 'success')
         return redirect(url_for('index'))
     flash('Invalid user / pass combination', 'warning')
@@ -45,3 +48,9 @@ def register():
     flash('User registration successful.', 'success')
     return redirect(url_for('login'))
   return render_template('register.html')
+
+@app.route('/logout', methods=['GET'])
+def logout():
+  logout_user()
+  flash('Logged out successfully', 'info')
+  return redirect(url_for('login'))
