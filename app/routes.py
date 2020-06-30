@@ -1,12 +1,21 @@
 from app import app, db, login_manager
-from app.models import User
+from app.models import User, Post
 from flask import render_template, request, redirect, url_for, flash
-from flask_login import login_user, logout_user
+from flask_login import login_user, logout_user, current_user
 
 
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 def index():
-    return render_template("index.html")
+    if request.method == "GET":
+        posts = Post.query.order_by(Post.created_on).all()
+        return render_template("index.html", posts=posts)
+    elif request.method == "POST":
+        post_body = request.form.get("post_body")
+        p = Post(body=post_body, user_id=current_user.id)
+        db.session.add(p)
+        db.session.commit()
+        flash("Post created.", "success")
+        return redirect(url_for("index"))
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -62,4 +71,19 @@ def logout():
 
 @app.route("/profile")
 def profile():
-    return render_template("profile.html")
+    posts = User.query.get(current_user.id).posts.all()
+    return render_template("profile.html", posts=posts)
+
+
+@app.route("/profile/post/<int:id>")
+def profile_single(id):
+    p = Post.query.get(id)
+    post = p
+    return render_template("profile-single.html", post=post)
+
+
+@app.route("/post/<int:id>")
+def index_single(id):
+    p = Post.query.get(id)
+    post = p
+    return render_template("index-single.html", post=post)
