@@ -94,13 +94,15 @@ def users():
     users = [i for i in User.query.all() if i.id != current_user.id]
     return render_template("users.html", users=users)
 
+
 @app.route("/users/follow/<int:id>")
 def user_follow(id):
     user = User.query.get(id)
     current_user.follow(user)
     db.session.commit()
     flash(f"You have followed {user.name}", "success")
-    return redirect(url_for('users'))
+    return redirect(url_for("users"))
+
 
 @app.route("/users/unfollow/<int:id>")
 def user_unfollow(id):
@@ -108,4 +110,4 @@ def user_unfollow(id):
     current_user.unfollow(user)
     db.session.commit()
     flash(f"You have unfollowed {user.name}", "success")
-    return redirect(url_for('users'))
+    return redirect(url_for("users"))
