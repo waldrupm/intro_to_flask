@@ -22,7 +22,7 @@ class User(UserMixin, db.Model):
         primaryjoin=(followers.c.follower_id == id),
         secondaryjoin=(followers.c.followed_id == id),
         backref=db.backref("followers", lazy="dynamic"),
-        lazy="dynamic"
+        lazy="dynamic",
     )
 
     def __repr__(self):
@@ -33,6 +33,17 @@ class User(UserMixin, db.Model):
 
     def check_password(self, pw_to_check):
         return check_password_hash(self.password, pw_to_check)
+
+    def follow(self, user):
+        if not self.is_following(user):
+            self.followed.append(user)
+
+    def unfollow(self, user):
+        if self.is_following(user):
+            self.followed.remove(user)
+
+    def is_following(self, user):
+        return self.followed.filter(followers.c.followed_id == user.id).count() > 0
 
 
 class Post(db.Model):
