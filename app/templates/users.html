@@ -1,0 +1,21 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h1>Users List</h1>
+<hr>
+
+<a href="{{ url_for('index') }}">Go Back</a>
+
+<ul class="list-group">
+    {% for user in users %}
+    <li class="list-group-item">
+        <div>
+            {{ user.email }}
+            <span>
+                <a class="btn btn-success" href="">Follow</a>
+            </span>
+        </div>
+    </li>
+
+    {% endfor %}
+</ul>
+{% endblock %}

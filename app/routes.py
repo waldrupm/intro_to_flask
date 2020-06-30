@@ -87,3 +87,9 @@ def index_single(id):
     p = Post.query.get(id)
     post = p
     return render_template("index-single.html", post=post)
+
+
+@app.route("/users")
+def users():
+    users = User.query.all()
+    return render_template("users.html", users=users)
