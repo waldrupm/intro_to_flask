@@ -1,7 +1,7 @@
 from app import app, db, login_manager
 from app.models import User, Post
 from flask import render_template, request, redirect, url_for, flash
-from flask_login import login_user, logout_user, current_user
+from flask_login import login_user, logout_user, current_user, login_required
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -70,6 +70,7 @@ def logout():
 
 
 @app.route("/profile")
+@login_required
 def profile():
     posts = User.query.get(current_user.id).posts.all()
     return render_template("profile.html", posts=posts)
@@ -90,12 +91,17 @@ def index_single(id):
 
 
 @app.route("/users")
+@login_required
 def users():
+    if not current_user or current_user.is_anonymous:
+        flash("You don't have access to this page. Please login to view", 'warning')
+        return redirect(url_for('login'))
     users = [i for i in User.query.all() if i.id != current_user.id]
     return render_template("users.html", users=users)
 
 
 @app.route("/users/follow/<int:id>")
+@login_required
 def user_follow(id):
     user = User.query.get(id)
     current_user.follow(user)
@@ -105,6 +111,7 @@ def user_follow(id):
 
 
 @app.route("/users/unfollow/<int:id>")
+@login_required
 def user_unfollow(id):
     user = User.query.get(id)
     current_user.unfollow(user)
