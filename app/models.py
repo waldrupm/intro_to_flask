@@ -31,7 +31,7 @@ class User(UserMixin, db.Model):
         return f'https://www.gravatar.com/avatar/{digest}?s={size}&d=identicon'
 
     def followed_posts(self):
-        followed =  Post.query.join(followers, (followers.c.followed_id == Post.user_id)).filter(followers.c.follower_id == self.id)
+        followed = Post.query.join(followers, (followers.c.followed_id == Post.user_id)).filter(followers.c.follower_id == self.id)
         users_posts = Post.query.filter_by(user_id=self.id)
         return followed.union(users_posts).order_by(Post.created_on.desc())
 
