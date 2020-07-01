@@ -7,7 +7,11 @@ from flask_login import login_user, logout_user, current_user, login_required
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "GET":
-        posts = Post.query.order_by(Post.created_on).all()
+        if current_user.is_authenticated:
+            posts = current_user.followed_posts()
+        else:
+            posts = Post.query.order_by(Post.created_on).all()
+
         return render_template("index.html", posts=posts)
     elif request.method == "POST":
         post_body = request.form.get("post_body")

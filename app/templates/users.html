@@ -9,6 +9,7 @@
     {% for user in users %}
         <li class="list-group-item">
             <div>
+                <img class="img-fluid" src="{{ user.avatar(64) }}" alt="">
                 {{ user.email }}
                 {% if not current_user.is_following(user) %}
                 <span>
