@@ -4,24 +4,35 @@ from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
+from flask_moment import Moment
 
-app = Flask(__name__)
+db = SQLAlchemy()
+migrate = Migrate()
+login_manager = LoginManager()
+moment = Moment()
 
-# Setup config object
+def create_app(config_class=Config):
+    app = Flask(__name__)
+    app.config.from_object(config_class)
 
-app.config.from_object(Config)
+    db.init_app(app)
+    migrate.init_app(app, db)
 
-# Setup database and ORM
+    login_manager.init_app(app)
+    login_manager.login_view = 'login'
+    login_manager.login_message_category = 'warning'
 
-db = SQLAlchemy(app)
+    moment.init_app(app)
 
-# Add db migrations
+    from app.blueprints.account import account
+    app.register_blueprint(account, url_prefix='/account')
 
-migrate = Migrate(app, db)
+    from app.blueprints.users import users
+    app.register_blueprint(users, url_prefix='/users')
 
+    with app.app_context():
+        from app import routes
 
-login_manager = LoginManager(app)
-login_manager.login_view = 'login'
-login_manager.login_message_category = 'warning'
+    return app
 
-from app import routes, models
+from app import models

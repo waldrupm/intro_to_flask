@@ -26,7 +26,7 @@ class User(UserMixin, db.Model):
         lazy="dynamic",
     )
 
-    def avatar(self, size=128):
+    def avatar(self, size):
         digest = md5(self.email.lower().encode('utf-8')).hexdigest()
         return f'https://www.gravatar.com/avatar/{digest}?s={size}&d=identicon'
 
