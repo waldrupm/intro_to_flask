@@ -19,7 +19,7 @@ def create_app(config_class=Config):
     migrate.init_app(app, db)
 
     login_manager.init_app(app)
-    login_manager.login_view = 'login'
+    login_manager.login_view = 'account.login'
     login_manager.login_message_category = 'warning'
 
     moment.init_app(app)
@@ -30,8 +30,12 @@ def create_app(config_class=Config):
     from app.blueprints.users import users
     app.register_blueprint(users, url_prefix='/users')
 
+
     with app.app_context():
         from app import routes
+        
+        from app.blueprints.errors import errors
+        app.register_blueprint(errors, url_prefix='/error')
 
     return app
 

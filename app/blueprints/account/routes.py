@@ -4,6 +4,7 @@ from flask_login import login_required, login_user, logout_user, current_user
 from app.models import User
 from app import db
 
+
 @account.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
