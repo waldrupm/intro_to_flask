@@ -37,6 +37,14 @@ def create_app(config_class=Config):
         from app.blueprints.errors import errors
         app.register_blueprint(errors, url_prefix='/error')
 
+    # email error logging
+    if not app.debug:
+        server = app.config.get('MAIL_SERVER')
+        username = app.config.get('MAIL_USERNAME')
+        password = app.config.get('MAIL_PASSWORD')
+        use_tls = app.config.get('MAIL_USE_TLS')
+        admins = app.config.get('ADMIN_EMAIL')
+
     return app
 
 from app import models
